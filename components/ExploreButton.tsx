@@ -1,0 +1,12 @@
+import Image from "next/image"
+
+const ExploreButton = () => {
+  return (
+    <button id="explore-btn" className="mx-auto mt-5" type="button">
+        <a href="#events">Explore Events</a>
+        <Image src="/icons/arrow-down.svg" alt="down arrow" className="ml-1" width={24} height={24} />
+    </button>
+  )
+}
+
+export default ExploreButton
