@@ -1,9 +1,18 @@
 import EventCard from "@/components/EventCard";
 import ExploreButton from "@/components/ExploreButton";
-import { EVENTS } from "@/lib/constants";
+import { NotFound } from "@/components/NotFound";
+import { IEvent } from "@/database";
+import { getAllEvents } from "@/app/actions/events";
+import { cacheLife, cacheTag } from "next/cache";
 
 
-export default function Home() {
+export default async function HomePage() {
+
+  "use cache"
+  cacheLife('hours')
+  cacheTag('all-events')
+  const events = await getAllEvents();
+
   return (
     <section className="">
       <h1 className="text-center">The Hub for Every Dev <br /> Event You Can't Miss</h1>
@@ -11,13 +20,21 @@ export default function Home() {
       <ExploreButton />
 
       <div className="mt-20 space-y-7">
-        <h3>Featured Events</h3>
-
-        <ul className="events">
-          {EVENTS.map((event) => (
-            <EventCard key={event.title} {...event} />
-          ))}
-        </ul>
+        {events && events.length > 0 ? (
+          <>
+            <h3>Featured Events</h3>
+            <ul className="events">
+              {events.map((event: IEvent) => (
+                <EventCard key={event.title} {...event} />
+              ))}
+            </ul>
+          </>
+        ) : (
+          <NotFound
+            title="No Events Found"
+            description="There are no events available at the moment. Check back soon!"
+          />
+        )}
       </div>
     </section>
   )
